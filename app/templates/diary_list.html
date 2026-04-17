@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}日記一覧 | Diary App{% endblock %}
+
+{% block content %}
+<section class="card">
+    <div class="section-header">
+        <h1>日記一覧</h1>
+        <a class="button primary" href="{{ url_for('diary.create_diary') }}">新規作成</a>
+    </div>
+
+    <form class="search-form" method="get" action="{{ url_for('diary.list_diaries') }}">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="q">キーワード</label>
+                <input id="q" type="text" name="q" value="{{ q }}" placeholder="タイトル・本文・タグで検索">
+            </div>
+
+            <div class="form-group">
+                <label for="entry_date">日付</label>
+                <input id="entry_date" type="date" name="entry_date" value="{{ entry_date }}">
+            </div>
+
+            <div class="form-group">
+                <label for="tag">タグ</label>
+                <input id="tag" type="text" name="tag" value="{{ tag }}" placeholder="例: 仕事">
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button class="button primary" type="submit">検索する</button>
+            <a class="button secondary" href="{{ url_for('diary.list_diaries') }}">条件をクリア</a>
+        </div>
+    </form>
+</section>
+
+<section class="diary-grid">
+    {% if diaries %}
+        {% for diary in diaries %}
+            <article class="diary-card">
+                <div class="diary-meta">
+                    <span>{{ diary.entry_date.strftime("%Y-%m-%d") }}</span>
+                    {% if diary.mood %}
+                        <span class="badge">{{ diary.mood }}</span>
+                    {% endif %}
+                </div>
+
+                <h2>
+                    <a href="{{ url_for('diary.diary_detail', diary_id=diary.id) }}">
+                        {{ diary.title }}
+                    </a>
+                </h2>
+
+                <p class="excerpt">
+                    {{ diary.content[:140] }}{% if diary.content|length > 140 %}...{% endif %}
+                </p>
+
+                {% if diary.tag_list %}
+                    <div class="tag-list">
+                        {% for tag_item in diary.tag_list %}
+                            <a
+                                class="tag"
+                                href="{{ url_for('diary.list_diaries', tag=tag_item) }}"
+                            >
+                                {{ tag_item }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </article>
+        {% endfor %}
+    {% else %}
+        <section class="card">
+            <p>条件に一致する日記はありません。</p>
+        </section>
+    {% endif %}
+</section>
+{% endblock %}

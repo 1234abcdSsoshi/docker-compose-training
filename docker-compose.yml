@@ -1,0 +1,17 @@
+services:
+  web:
+    build: .
+    container_name: diary-app
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: sqlite:////app/app/db/diary.sqlite3
+    volumes:
+      - .:/app
+      - diary_data:/app/app/db
+    command: python run.py
+
+volumes:
+  diary_data:

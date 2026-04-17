@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }} | Diary App{% endblock %}
+
+{% block content %}
+<section class="card">
+    <h1>{{ page_title }}</h1>
+
+    <form method="post">
+        <div class="form-group">
+            <label for="title">タイトル</label>
+            <input
+                id="title"
+                type="text"
+                name="title"
+                value="{{ form_data.get('title', diary.title if diary else '') }}"
+                maxlength="200"
+                required
+            >
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="entry_date">日付</label>
+                <input
+                    id="entry_date"
+                    type="date"
+                    name="entry_date"
+                    value="{{ form_data.get('entry_date', diary.entry_date.strftime('%Y-%m-%d') if diary and diary.entry_date else '') }}"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="mood">気分</label>
+                <select id="mood" name="mood">
+                    {% set selected_mood = form_data.get('mood', diary.mood if diary else '') %}
+                    <option value="">未選択</option>
+                    <option value="嬉しい" {% if selected_mood == "嬉しい" %}selected{% endif %}>嬉しい</option>
+                    <option value="普通" {% if selected_mood == "普通" %}selected{% endif %}>普通</option>
+                    <option value="疲れた" {% if selected_mood == "疲れた" %}selected{% endif %}>疲れた</option>
+                    <option value="悲しい" {% if selected_mood == "悲しい" %}selected{% endif %}>悲しい</option>
+                    <option value="楽しい" {% if selected_mood == "楽しい" %}selected{% endif %}>楽しい</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="tags">タグ</label>
+            <input
+                id="tags"
+                type="text"
+                name="tags"
+                value="{{ form_data.get('tags', diary.tags if diary else '') }}"
+                placeholder="例: 仕事, 学習, 趣味"
+            >
+            <small>カンマ区切りで入力してください。</small>
+        </div>
+
+        <div class="form-group">
+            <label for="content">本文</label>
+            <textarea
+                id="content"
+                name="content"
+                rows="12"
+                required
+            >{{ form_data.get('content', diary.content if diary else '') }}</textarea>
+        </div>
+
+        <div class="form-actions">
+            <button class="button primary" type="submit">{{ submit_label }}</button>
+            <a class="button secondary" href="{{ url_for('diary.list_diaries') }}">戻る</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

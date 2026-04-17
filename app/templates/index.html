@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}ホーム | Diary App{% endblock %}
+
+{% block content %}
+<section class="hero card">
+    <h1>日記アプリへようこそ</h1>
+    <p>
+        今日の出来事、感情、学びを気軽に記録できます。
+        まずは 1 件書いてみましょう。
+    </p>
+    <div class="hero-actions">
+        <a class="button primary" href="{{ url_for('diary.create_diary') }}">新しい日記を書く</a>
+        <a class="button secondary" href="{{ url_for('diary.list_diaries') }}">日記一覧を見る</a>
+    </div>
+</section>
+
+<section class="card">
+    <div class="section-header">
+        <h2>最近の日記</h2>
+    </div>
+
+    {% if recent_diaries %}
+        <div class="diary-grid">
+            {% for diary in recent_diaries %}
+                <article class="diary-card">
+                    <div class="diary-meta">
+                        <span>{{ diary.entry_date.strftime("%Y-%m-%d") }}</span>
+                        {% if diary.mood %}
+                            <span class="badge">{{ diary.mood }}</span>
+                        {% endif %}
+                    </div>
+
+                    <h3>
+                        <a href="{{ url_for('diary.diary_detail', diary_id=diary.id) }}">
+                            {{ diary.title }}
+                        </a>
+                    </h3>
+
+                    <p class="excerpt">
+                        {{ diary.content[:120] }}{% if diary.content|length > 120 %}...{% endif %}
+                    </p>
+
+                    {% if diary.tag_list %}
+                        <div class="tag-list">
+                            {% for tag in diary.tag_list %}
+                                <span class="tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>まだ日記がありません。</p>
+    {% endif %}
+</section>
+{% endblock %}

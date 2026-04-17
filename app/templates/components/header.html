@@ -1,0 +1,11 @@
+<header class="site-header">
+    <div class="container header-inner">
+        <a class="logo" href="{{ url_for('diary.home') }}">Diary App</a>
+
+        <nav class="nav">
+            <a href="{{ url_for('diary.home') }}">ホーム</a>
+            <a href="{{ url_for('diary.list_diaries') }}">一覧</a>
+            <a class="button primary small" href="{{ url_for('diary.create_diary') }}">新規作成</a>
+        </nav>
+    </div>
+</header>
